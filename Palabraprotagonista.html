@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>La palabra protagonista</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+
+  --bg:#e6efdf;--paper:#ffffff;--ink:#27382a;--muted:#6b7f6c;--green:#3f8a3a;--soft:#dcebd5;--line:#a9cba0;--on:#ffffff;--focus:#1d5fd1;
+
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Andika,"Comic Sans MS","Trebuchet MS",system-ui,sans-serif;font-size:1.05rem;line-height:1.4}
+
+.sheet{isolation:isolate;max-width:740px;margin:16px auto;padding:26px 22px 24px;background:var(--paper);border:4px dashed var(--green);border-radius:12px}
+
+h1{position:relative;margin:4px 30px 28px;padding:10px 12px;border:3px solid var(--green);background:var(--paper);text-align:center;font-size:clamp(1.15rem,4.6vw,1.8rem);font-weight:400;text-transform:uppercase}
+
+h1::before,h1::after{content:"";position:absolute;top:12px;width:36px;height:100%;background:var(--green);z-index:-1}
+
+h1::before{left:-30px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,32% 50%)}
+
+h1::after{right:-30px;clip-path:polygon(0 0,100% 0,68% 50%,100% 100%,0 100%)}
+
+
+
+.gen{display:flex;align-items:center;gap:12px;margin-bottom:26px;padding:12px 14px;background:var(--soft);border:3px solid var(--green);border-radius:14px}
+
+#word{flex:1;min-width:0;text-align:center;font-size:clamp(1.8rem,8.5vw,3.2rem);font-weight:700;overflow-wrap:anywhere;min-height:1.3em}
+
+#word.empty{font-size:1.2rem;font-weight:400;color:var(--muted)}
+
+#word.pop{animation:pop .35s ease-out}
+
+@keyframes pop{0%{transform:scale(.8);opacity:.3}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+button{font:inherit;cursor:pointer}
+
+.new{flex:none;padding:10px 16px;background:var(--green);color:var(--on);border:0;border-radius:10px;font-weight:700}
+
+
+
+input,textarea{font:inherit;color:var(--ink);background:transparent;border:2px solid var(--green);border-radius:8px;padding:6px 10px;width:100%}
+
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+.pair{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+
+.pair label{flex:none;width:11.5em}
+
+.pair .arrow{flex:none;color:var(--green);font-size:1.8rem;line-height:1}
+
+.pair input{font-size:1.5rem;height:3.2rem}
+
+.counts{display:grid;grid-template-columns:5.5rem 1fr 1fr;gap:10px 16px;margin:22px 0}
+
+.counts input{height:3rem;text-align:center}
+
+.syl{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-bottom:22px;align-items:end}
+
+.claps{display:flex;gap:2px}
+
+.clap{background:none;border:0;padding:2px;font-size:2rem;line-height:1;filter:grayscale(1);opacity:.35;transition:opacity .15s,filter .15s}
+
+.clap[aria-pressed="true"]{filter:none;opacity:1}
+
+.boxes{display:flex;gap:8px}
+
+.boxes input{text-align:center;padding:4px;height:3rem;min-width:0}
+
+.ends{display:flex;flex-wrap:wrap;gap:14px 28px;margin-bottom:20px}
+
+.ends div{display:flex;align-items:center;gap:10px}
+
+.ends input{width:4.2rem;height:3.6rem;text-align:center;font-size:1.6rem}
+
+.inline{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+
+.inline label{flex:none}
+
+.inline input{border:0;border-bottom:2px solid var(--green);border-radius:0;padding:4px 6px}
+
+.block{margin:20px 0 6px;text-align:center}
+
+textarea.ruled{display:block;margin-top:6px;height:7.4rem;padding:0 12px;line-height:2.2rem;resize:vertical;background:repeating-linear-gradient(transparent 0,transparent calc(2.2rem - 2px),var(--line) calc(2.2rem - 2px),var(--line) 2.2rem) local}
+
+.tools{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+
+.tools button{padding:8px 14px;background:transparent;color:var(--green);border:2px solid var(--green);border-radius:10px;font-weight:700}
+
+@media (max-width:560px){
+
+  .sheet{margin:8px;padding:20px 14px}
+
+  .pair{flex-wrap:wrap;gap:6px 10px}.pair label{width:auto;flex:1 1 70%}.pair input{flex:1 1 100%}.pair .arrow{display:none}
+
+  .syl{grid-template-columns:1fr}.counts{grid-template-columns:5rem 1fr}
+
+  .counts .c-con{grid-column:1/-1}
+
+}
+
+@media print{body{background:#fff}.gen .new,.tools{display:none}.sheet{margin:0}}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="sheet">
+
+  <h1>La palabra protagonista</h1>
+
+
+
+  <section class="gen" aria-label="Generador de palabra">
+
+    <div id="word" class="empty" aria-live="polite">Pulsa el botón</div>
+
+    <button type="button" class="new" id="gen">Nueva palabra</button>
+
+  </section>
+
+
+
+  <form id="ficha" autocomplete="off">
+
+    <div class="pair"><label for="min">Palabra en minúscula</label><span class="arrow" aria-hidden="true">➜</span><input id="min" type="text"></div>
+
+    <div class="pair"><label for="may">Palabra en mayúscula</label><span class="arrow" aria-hidden="true">➜</span><input id="may" type="text"></div>
+
+
+
+    <div class="counts">
+
+      <label for="nl">Nº letras:</label><label for="vo">Vocales:</label><label for="co">Consonantes:</label>
+
+      <input id="nl" type="text" inputmode="numeric" maxlength="2">
+
+      <input id="vo" type="text">
+
+      <input id="co" type="text" class="c-con">
+
+    </div>
+
+
+
+    <div class="syl">
+
+      <div>
+
+        <div id="sil-l">Nº sílabas:</div>
+
+        <div class="claps" role="group" aria-labelledby="sil-l">
+
+          <button type="button" class="clap" aria-pressed="false" aria-label="1 sílaba">👏</button>
+
+          <button type="button" class="clap" aria-pressed="false" aria-label="2 sílabas">👏</button>
+
+          <button type="button" class="clap" aria-pressed="false" aria-label="3 sílabas">👏</button>
+
+          <button type="button" class="clap" aria-pressed="false" aria-label="4 sílabas">👏</button>
+
+          <button type="button" class="clap" aria-pressed="false" aria-label="5 sílabas">👏</button>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <div id="sb-l">Sílabas:</div>
+
+        <div class="boxes" role="group" aria-labelledby="sb-l">
+
+          <input type="text" maxlength="4" aria-label="Sílaba 1"><input type="text" maxlength="4" aria-label="Sílaba 2"><input type="text" maxlength="4" aria-label="Sílaba 3"><input type="text" maxlength="4" aria-label="Sílaba 4"><input type="text" maxlength="4" aria-label="Sílaba 5">
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="ends">
+
+      <div><label for="ini">Empieza por:</label><input id="ini" type="text" maxlength="2"></div>
+
+      <div><label for="fin">Acaba en:</label><input id="fin" type="text" maxlength="3"></div>
+
+    </div>
+
+
+
+    <div class="inline"><label for="rima">Una palabra con la que rima:</label><input id="rima" type="text"></div>
+
+    <div class="inline"><label for="igual">Una palabra que empieza igual:</label><input id="igual" type="text"></div>
+
+
+
+    <div class="block"><label for="frase">Una frase con la palabra protagonista:</label>
+
+      <textarea id="frase" class="ruled" rows="3"></textarea></div>
+
+    <div class="block"><label for="def">Define con tus palabras:</label>
+
+      <textarea id="def" class="ruled" rows="3"></textarea></div>
+
+
+
+    <div class="tools">
+
+      <button type="reset">Borrar ficha</button>
+
+      <button type="button" onclick="window.print()">Imprimir</button>
+
+    </div>
+
+  </form>
+
+</main>
+
+
+
+<script>
+
+const WORDS=["sol","pan","flor","gato","casa","luna","mesa","libro","perro","árbol","pelota","ventana","zapato","tortuga","caracol","naranja","conejo","payaso","silla","nube","globo","estrella","mariposa","elefante","bicicleta","cocodrilo","chocolate","ratón","dragón","pirata","castillo","manzana","plátano","jirafa","cohete","planeta","bosque","hormiga","paraguas","campana","helado","tambor","guitarra","delfín","tiburón","abeja","semáforo","calabaza","mochila","lápiz","escuela","fresa","ballena","murciélago","caballo","mariquita","jardín","pingüino","volcán","telescopio","ordenador","reciclaje","compostaje","lombriz","semilla","hoja","huerto"];
+
+const el=document.getElementById("word"),btn=document.getElementById("gen");
+
+let last=-1;
+
+btn.addEventListener("click",()=>{
+
+  let i;do{i=Math.floor(Math.random()*WORDS.length)}while(i===last);
+
+  last=i;el.textContent=WORDS[i];el.classList.remove("empty","pop");void el.offsetWidth;el.classList.add("pop");
+
+});
+
+const claps=[...document.querySelectorAll(".clap")];
+
+function setClaps(n){claps.forEach((c,k)=>c.setAttribute("aria-pressed",k<n))}
+
+let cur=0;
+
+claps.forEach((c,k)=>c.addEventListener("click",()=>{cur=(cur===k+1)?0:k+1;setClaps(cur)}));
+
+document.getElementById("ficha").addEventListener("reset",()=>{cur=0;setClaps(0)});
+
+</script>
+
+</body>
+
+</html>
